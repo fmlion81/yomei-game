@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>預命通帳 - セーブ機能対応版</title>
+  <style>
+    body {
+      background-color: #0d0e15;
+      color: #e0e0e0;
+      font-family: 'Courier New', Consolas, monospace, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    #game-container {
+      width: 600px;
+      background-color: #161822;
+      border: 3px solid #d4af37;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 22px;
+      color: #ffd700;
+      margin: 0 0 8px 0;
+      border-bottom: 2px dashed #d4af37;
+      padding-bottom: 8px;
+      letter-spacing: 2px;
+    }
+
+    .system-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0d0e15;
+      padding: 6px 10px;
+      border: 1px solid #333;
+      margin-bottom: 12px;
+      border-radius: 4px;
+    }
+
+    .system-bar button {
+      padding: 4px 8px;
+      font-size: 10px;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 8px 2px;
+      background: #222536;
+      border: 1px solid #d4af37;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 11px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: #d4af37;
+      color: #000;
+    }
+
+    .tab-btn:disabled {
+      border-color: #444;
+      color: #555;
+      background-color: #111;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .party-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .char-card {
+      background-color: #0d0e15;
+      border: 1px solid #444;
+      padding: 8px;
+      font-size: 11px;
+      border-radius: 4px;
+    }
+
+    .char-card.active-turn {
+      border-color: #ffd700;
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+    }
+
+    .char-card.dead {
+      opacity: 0.5;
+      background-color: #200;
+    }
+
+    .bar-bg {
+      background-color: #333;
+      height: 6px;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 2px;
+      margin-bottom: 4px;
+    }
+
+    .bar-fill-hp { background-color: #2ecc71; height: 100%; width: 100%; transition: width 0.3s; }
+    .bar-fill-mp { background-color: #9b59b6; height: 100%; width: 100%; transition: width 0.3s; }
+
+    .enemies-panel {
+      background-color: #0d0e15;
+      border: 1px solid #e74c3c;
+      padding: 8px;
+      margin-bottom: 12px;
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .enemy-row {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .enemy-row.dead {
+      opacity: 0.3;
+    }
+
+    #message-log {
+      height: 120px;
+      border: 1px solid #444;
+      padding: 8px;
+      margin-bottom: 12px;
+      overflow-y: auto;
+      font-size: 11px;
+      line-height: 1.4;
+      background-color: #08090d;
+    }
+
+    .action-panel { display: none; }
+    .action-panel.active { display: block; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    button.cmd-btn {
+      background-color: #222536;
+      color: #fff;
+      border: 1px solid #d4af37;
+      padding: 6px;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    button.cmd-btn:hover:not(:disabled) {
+      background-color: #d4af37;
+      color: #000;
+    }
+
+    button.cmd-btn:disabled {
+      border-color: #444;
+      color: #555;
+      background-color: #111;
+      cursor: not-allowed;
+    }
+
+    .gold-text { color: #ffd700; font-weight: bold; }
+    .status-bad { color: #e74c3c; font-weight: bold; }
+
+    .turn-indicator {
+      font-size: 12px;
+      color: #ffd700;
+      font-weight: bold;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .target-select-area {
+      background: #1a1c29;
+      border: 1px solid #ffd700;
+      padding: 8px;
+      margin-bottom: 8px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div id="game-container">
+  <h1>預 命 通 帳</h1>
+
+  <!-- システムバー（セーブ＆ロード） -->
+  <div class="system-bar">
+    <div style="font-size: 11px;">
+      所持金: <span id="gold" class="gold-text">0</span> G | 撃破数: <span id="kill-count">0</span> 体
+    </div>
+    <div style="display: flex; gap: 4px;">
+      <button id="btn-save" class="cmd-btn" onclick="saveGame()">セーブ</button>
+      <button id="btn-load" class="cmd-btn" onclick="loadGame()">ロード</button>
+      <button id="btn-reset-data" class="cmd-btn" style="border-color: #e74c3c; color: #ff9999;" onclick="confirmReset()">最初から</button>
+    </div>
+  </div>
+
+  <!-- パーティステータス -->
+  <div id="party-container" class="party-panel"></div>
+
+  <!-- 敵一覧ステータス -->
+  <div id="enemies-container" class="enemies-panel"></div>
+
+  <!-- メッセージログ -->
+  <div id="message-log"></div>
+
+  <!-- タブ切り替え -->
+  <div class="nav-tabs">
+    <button id="tab-battle-btn" class="tab-btn active" onclick="switchTab('battle')">戦闘</button>
+    <button id="tab-pub-btn" class="tab-btn" onclick="switchTab('pub')" disabled>酒場</button>
+    <button id="tab-inn-btn" class="tab-btn" onclick="switchTab('inn')" disabled>宿屋</button>
+    <button id="tab-bank-btn" class="tab-btn" onclick="switchTab('bank')">預命銀行</button>
+    <button id="tab-item-btn" class="tab-btn" onclick="switchTab('item')">道具屋</button>
+  </div>
+
+  <!-- 戦闘パネル -->
+  <div id="panel-battle" class="action-panel active">
+    <div id="turn-indicator" class="turn-indicator">勇者の行動を選択してください</div>
+    
+    <!-- ターゲット選択エリア -->
+    <div id="target-select" class="target-select-area">
+      <div style="font-size: 11px; margin-bottom: 4px;" id="target-select-title">対象を選択してください:</div>
+      <div id="target-buttons" class="grid-2"></div>
+    </div>
+
+    <div id="command-buttons" class="grid-2"></div>
+
+    <button id="btn-next" class="cmd-btn" onclick="nextEnemy()" style="display:none; width: 100%; margin-top: 8px;">次の敵に挑む</button>
+    <button id="btn-reset" class="cmd-btn" onclick="initGame()" style="display:none; width: 100%; margin-top: 8px;">最初からやり直す</button>
+  </div>
+
+  <!-- 酒場パネル -->
+  <div id="panel-pub" class="action-panel">
+    <div style="text-align: center; padding: 10px;">
+      <p style="font-size: 13px; color: #ffd700; font-weight: bold; margin-bottom: 8px;">【冒険者酒場】</p>
+      <div id="pub-scout-list"></div>
+    </div>
+  </div>
+
+  <!-- 宿屋パネル -->
+  <div id="panel-inn" class="action-panel">
+    <div style="text-align: center; padding: 10px;">
+      <p style="font-size: 13px; color: #ffd700; font-weight: bold; margin-bottom: 8px;">【安らぎの宿屋】</p>
+      <p style="font-size: 11px; color: #ccc; margin-bottom: 12px;">全員の HP・MP が全回復し、状態異常も治ります。</p>
+      <button id="btn-stay-inn" class="cmd-btn" onclick="stayInn()" style="padding: 10px 20px;">一泊する (費用: <span id="inn-price">20</span> G)</button>
+    </div>
+  </div>
+
+  <!-- 銀行パネル -->
+  <div id="panel-bank" class="action-panel">
+    <p style="font-size: 11px; color: #ffd700; text-align: center;">※取引できる命（HP）は勇者のもの限定です。</p>
+    <div class="grid-2">
+      <button class="cmd-btn" onclick="depositHP(10)">勇者のHP10を預ける<br>(+100G)</button>
+      <button class="cmd-btn" onclick="depositHP(50)">勇者のHP50を預ける<br>(+500G)</button>
+      <button class="cmd-btn" onclick="withdrawHP(100)">100G 引き出す<br>(勇者HP+10)</button>
+      <button class="cmd-btn" onclick="withdrawHP(500)">500G 引き出す<br>(勇者HP+50)</button>
+    </div>
+  </div>
+
+  <!-- 道具屋パネル -->
+  <div id="panel-item" class="action-panel">
+    <div class="grid-2">
+      <button class="cmd-btn" onclick="buyItem('herb')">薬草 (150G)</button>
+      <button class="cmd-btn" onclick="buyItem('greatHerb')">上薬草 (350G)</button>
+      <button class="cmd-btn" onclick="buyItem('antidote')">どくけし草 (100G)</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const SAVE_KEY = 'yomei_tsucho_save_data';
+
+  let party = [];
+  let enemies = [];
+  let killCount = 0;
+  let isGameOver = false;
+  let inBattle = false;
+  let canUseInn = false;
+  let gold = 0;
+  let items = { herb: 2, greatHerb: 0, antidote: 1 };
+
+  let unlockWarrior = false;
+  let unlockCleric = false;
+
+  let turnQueue = [];
+  let currentTurnIdx = 0;
+  let plannedActions = [];
+
+  const logElement = document.getElementById('message-log');
+
+  function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  // セーブ機能
+  function saveGame(isAuto = false) {
+    if (inBattle) {
+      if (!isAuto) addLog("【システム】戦闘中はセーブできません！");
+      return;
+    }
+
+    const saveData = {
+      party: party,
+      killCount: killCount,
+      gold: gold,
+      items: items,
+      canUseInn: canUseInn,
+      unlockWarrior: unlockWarrior,
+      unlockCleric: unlockCleric
+    };
+
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
+      if (!isAuto) {
+        addLog("【システム】ゲームデータをセーブしました。");
+      } else {
+        addLog("【システム】オートセーブされました。");
+      }
+    } catch (e) {
+      addLog("【エラー】セーブに失敗しました。");
+    }
+  }
+
+  // ロード機能
+  function loadGame() {
+    if (inBattle) {
+      addLog("【システム】戦闘中はロードできません！");
+      return;
+    }
+
+    const json = localStorage.getItem(SAVE_KEY);
+    if (!json) {
+      addLog("【システム】セーブデータが見つかりません。");
+      return;
+    }
+
+    try {
+      const data = JSON.parse(json);
+      party = data.party;
+      killCount = data.killCount;
+      gold = data.gold;
+      items = data.items;
+      canUseInn = data.canUseInn;
+      unlockWarrior = data.unlockWarrior;
+      unlockCleric = data.unlockCleric;
+
+      isGameOver = false;
+      logElement.innerHTML = '';
+      addLog("【システム】セーブデータをロードしました！");
+
+      spawnEnemy();
+      updateDisplay();
+    } catch (e) {
+      addLog("【エラー】ロードに失敗しました。データが破損しています。");
+    }
+  }
+
+  function confirmReset() {
+    if (confirm("セーブデータを削除して最初からやり直しますか？")) {
+      localStorage.removeItem(SAVE_KEY);
+      initGame();
+    }
+  }
+
+  function initGame() {
+    party = [
+      {
+        id: 'hero', name: '勇者', job: 'hero',
+        level: 1, hp: 100, maxHp: 100, mp: 30, maxMp: 30,
+        atk: 12, def: 3, spd: 6, exp: 0, nextExp: 10,
+        status: { poison: 0, paralyze: 0, darkness: 0 },
+        isCovering: false
+      }
+    ];
+
+    gold = 0;
+    killCount = 0;
+    isGameOver = false;
+    canUseInn = false;
+    unlockWarrior = false;
+    unlockCleric = false;
+    items = { herb: 2, greatHerb: 0, antidote: 1 };
+
+    logElement.innerHTML = '';
+    addLog('【預命通帳】新たな冒険が始まった！');
+
+    // 起動時にロードできるか確認
+    if (localStorage.getItem(SAVE_KEY)) {
+      addLog('※保存されたデータがあります。「ロード」ボタンで再開できます。');
+    }
+
+    spawnEnemy();
+    updateDisplay();
+    switchTab('battle');
+  }
+
+  function spawnEnemy() {
+    inBattle = true;
+    canUseInn = false;
+    enemies = [];
+
+    // 戦闘中はセーブ不可に
+    document.getElementById('btn-save').disabled = true;
+    document.getElementById('btn-load').disabled = true;
+
+    party.forEach(p => p.isCovering = false);
+
+    const isBoss = ((killCount + 1) % 5 === 0);
+
+    if (isBoss) {
+      if (killCount + 1 === 5) {
+        enemies.push({ id: 0, name: "【BOSS】毒竜デビル", hp: 250, maxHp: 250, atk: 20, exp: 100, isBoss: true, ailment: 'poison' });
+      } else if (killCount + 1 === 10) {
+        enemies.push({ id: 0, name: "【BOSS】麻痺の大死神", hp: 550, maxHp: 550, atk: 35, exp: 280, isBoss: true, ailment: 'paralyze' });
+      } else {
+        enemies.push({ id: 0, name: "【BOSS】漆黒の魔王", hp: 1200, maxHp: 1200, atk: 60, exp: 700, isBoss: true, ailment: 'darkness' });
+      }
+      addLog(`★ WARNING！ボス ${enemies[0].name} が立ち塞がる！`);
+    } else {
+      let count = 1;
+      if (killCount >= 10) {
+        count = getRandomInt(1, 3);
+      }
+
+      const labels = ['A', 'B', 'C'];
+      for (let i = 0; i < count; i++) {
+        let nameStr = (count > 1) ? `魔物 ${labels[i]}` : `魔物 (Lv.${killCount + 1})`;
+        enemies.push({
+          id: i,
+          name: nameStr,
+          hp: 25 + (killCount * 10),
+          maxHp: 25 + (killCount * 10),
+          atk: 7 + Math.floor(killCount * 1.8),
+          exp: 6 + (killCount * 3),
+          isBoss: false,
+          ailment: (killCount >= 3) ? ['poison', 'paralyze', 'darkness'][getRandomInt(0, 2)] : null
+        });
+      }
+
+      if (count > 1) {
+        addLog(`魔物が ${count} 体群れを成して出現した！`);
+      } else {
+        addLog(`${enemies[0].name} が現れた！`);
+      }
+    }
+
+    setTabsAccess(false);
+    document.getElementById('btn-next').style.display = 'none';
+    resetTurnCommands();
+    updateDisplay();
+  }
+
+  function resetTurnCommands() {
+    turnQueue = party.filter(p => p.hp > 0);
+    currentTurnIdx = 0;
+    plannedActions = [];
+    document.getElementById('target-select').style.display = 'none';
+    renderCommandButtons();
+  }
+
+  function renderCommandButtons() {
+    const cmdBox = document.getElementById('command-buttons');
+    cmdBox.innerHTML = '';
+
+    if (currentTurnIdx >= turnQueue.length) {
+      document.getElementById('turn-indicator').textContent = '行動処理中...';
+      executeTurn();
+      return;
+    }
+
+    const char = turnQueue[currentTurnIdx];
+    document.getElementById('turn-indicator').textContent = `${char.name} (${char.job === 'hero' ? '勇者' : char.job === 'warrior' ? '戦士' : '僧侶'}) の行動を選択`;
+
+    if (char.job === 'hero') {
+      addCmdBtn(cmdBox, 'こうげき', () => promptEnemyTarget(char, { type: 'attack' }));
+      addCmdBtn(cmdBox, 'ファイア (MP5)', () => promptEnemyTarget(char, { type: 'fire', mp: 5 }), char.mp < 5);
+      addCmdBtn(cmdBox, 'ギガフレイム (MP15)', () => selectAction(char, { type: 'giga', mp: 15 }), char.mp < 15);
+      addCmdBtn(cmdBox, '薬草を使う', () => promptPartyTarget(char, { type: 'herb' }), items.herb <= 0);
+    } else if (char.job === 'warrior') {
+      addCmdBtn(cmdBox, 'こうげき', () => promptEnemyTarget(char, { type: 'attack' }));
+      addCmdBtn(cmdBox, 'かばう (MP3)', () => selectAction(char, { type: 'cover', mp: 3 }), char.mp < 3);
+      addCmdBtn(cmdBox, '渾身の一撃 (MP6)', () => promptEnemyTarget(char, { type: 'heavy_atk', mp: 6 }), char.mp < 6);
+      addCmdBtn(cmdBox, '薬草を使う', () => promptPartyTarget(char, { type: 'herb' }), items.herb <= 0);
+    } else if (char.job === 'cleric') {
+      addCmdBtn(cmdBox, 'こうげき', () => promptEnemyTarget(char, { type: 'attack' }));
+      addCmdBtn(cmdBox, 'ヒール (MP5)', () => promptPartyTarget(char, { type: 'heal', mp: 5 }), char.mp < 5);
+      addCmdBtn(cmdBox, '全体回復 (MP14)', () => selectAction(char, { type: 'heal_all', mp: 14 }), char.mp < 14);
+      addCmdBtn(cmdBox, 'キアリー (MP6)', () => selectAction(char, { type: 'kiari', mp: 6 }), char.mp < 6);
+    }
+  }
+
+  function addCmdBtn(container, text, onClick, disabled = false) {
+    const btn = document.createElement('button');
+    btn.className = 'cmd-btn';
+    btn.innerHTML = text;
+    btn.disabled = disabled;
+    btn.onclick = onClick;
+    container.appendChild(btn);
+  }
+
+  function promptEnemyTarget(actor, action) {
+    const aliveEnemies = enemies.filter(e => e.hp > 0);
+    if (aliveEnemies.length === 1) {
+      action.targetEnemyId = aliveEnemies[0].id;
+      selectAction(actor, action);
+      return;
+    }
+
+    document.getElementById('target-select-title').textContent = '攻撃する敵を選択してください:';
+    const targetBox = document.getElementById('target-buttons');
+    targetBox.innerHTML = '';
+    document.getElementById('target-select').style.display = 'block';
+
+    aliveEnemies.forEach(enemy => {
+      const btn = document.createElement('button');
+      btn.className = 'cmd-btn';
+      btn.textContent = `${enemy.name} (HP:${enemy.hp})`;
+      btn.onclick = () => {
+        action.targetEnemyId = enemy.id;
+        document.getElementById('target-select').style.display = 'none';
+        selectAction(actor, action);
+      };
+      targetBox.appendChild(btn);
+    });
+  }
+
+  function promptPartyTarget(actor, action) {
+    document.getElementById('target-select-title').textContent = '対象の仲間を選択してください:';
+    const targetBox = document.getElementById('target-buttons');
+    targetBox.innerHTML = '';
+    document.getElementById('target-select').style.display = 'block';
+
+    party.forEach(member => {
+      const btn = document.createElement('button');
+      btn.className = 'cmd-btn';
+      btn.textContent = `${member.name} (HP:${member.hp}/${member.maxHp})`;
+      btn.disabled = member.hp <= 0;
+      btn.onclick = () => {
+        action.targetPartyId = member.id;
+        document.getElementById('target-select').style.display = 'none';
+        selectAction(actor, action);
+      };
+      targetBox.appendChild(btn);
+    });
+  }
+
+  function selectAction(actor, action) {
+    plannedActions.push({ actor, action });
+    currentTurnIdx++;
+    renderCommandButtons();
+  }
+
+  function executeTurn() {
+    document.getElementById('command-buttons').innerHTML = '';
+    let delay = 0;
+
+    plannedActions.forEach(act => {
+      setTimeout(() => {
+        if (act.actor.hp <= 0) return;
+        if (enemies.every(e => e.hp <= 0)) return;
+
+        if (act.actor.status.paralyze > 0 && Math.random() < 0.5) {
+          addLog(`${act.actor.name} は体が痺れて動けない！`);
+          return;
+        }
+
+        const a = act.action;
+        if (a.mp) act.actor.mp -= a.mp;
+
+        let targetEnemy = enemies.find(e => e.id === a.targetEnemyId && e.hp > 0);
+        if (!targetEnemy) targetEnemy = enemies.find(e => e.hp > 0);
+
+        if (a.type === 'attack') {
+          let dmg = Math.max(1, act.actor.atk - Math.floor(getRandomInt(0, 2)));
+          if (act.actor.status.darkness > 0 && Math.random() < 0.5) {
+            addLog(`${act.actor.name} の攻撃は暗闇で外れた！`);
+          } else {
+            targetEnemy.hp -= dmg;
+            addLog(`${act.actor.name} の攻撃！ ${targetEnemy.name} に ${dmg} ダメージ！`);
+          }
+        } else if (a.type === 'fire') {
+          let dmg = 35 + Math.floor(act.actor.atk * 0.8);
+          targetEnemy.hp -= dmg;
+          addLog(`${act.actor.name} の【ファイア】！ ${targetEnemy.name} に ${dmg} ダメージ！`);
+        } else if (a.type === 'giga') {
+          let dmg = 80 + Math.floor(act.actor.atk * 1.3);
+          enemies.filter(e => e.hp > 0).forEach(e => e.hp -= dmg);
+          addLog(`${act.actor.name} の【ギガフレイム】！ 敵全体に ${dmg} の大ダメージ！`);
+        } else if (a.type === 'heavy_atk') {
+          let dmg = Math.floor(act.actor.atk * 1.8);
+          targetEnemy.hp -= dmg;
+          addLog(`${act.actor.name} の【渾身の一撃】！ ${targetEnemy.name} に ${dmg} ダメージ！`);
+        } else if (a.type === 'cover') {
+          act.actor.isCovering = true;
+          addLog(`${act.actor.name} は【かばう】姿勢をとった！`);
+        } else if (a.type === 'heal') {
+          let target = party.find(p => p.id === a.targetPartyId);
+          if (target) {
+            target.hp = Math.min(target.maxHp, target.hp + 80);
+            addLog(`${act.actor.name} は ${target.name} のHPを 80 回復した！`);
+          }
+        } else if (a.type === 'heal_all') {
+          party.forEach(p => {
+            if (p.hp > 0) p.hp = Math.min(p.maxHp, p.hp + 50);
+          });
+          addLog(`${act.actor.name} の【全体回復】！ 全員のHPが50回復！`);
+        } else if (a.type === 'kiari') {
+          party.forEach(p => {
+            p.status.poison = 0; p.status.paralyze = 0; p.status.darkness = 0;
+          });
+          addLog(`${act.actor.name} の【キアリー】！ 全員の状態異常が完治した！`);
+        } else if (a.type === 'herb') {
+          items.herb--;
+          let target = party.find(p => p.id === a.targetPartyId);
+          if (target) {
+            target.hp = Math.min(target.maxHp, target.hp + 30);
+            addLog(`${act.actor.name} は薬草を ${target.name} に使用！ (HP+30)`);
+          }
+        }
+
+        updateDisplay();
+      }, delay);
+      delay += 550;
+    });
+
+    setTimeout(() => {
+      if (enemies.every(e => e.hp <= 0)) {
+        onEnemyDefeated();
+        return;
+      }
+
+      let aliveEnemies = enemies.filter(e => e.hp > 0);
+
+      aliveEnemies.forEach(enemy => {
+        let aliveParty = party.filter(p => p.hp > 0);
+        if (aliveParty.length === 0) return;
+
+        let target = aliveParty[getRandomInt(0, aliveParty.length - 1)];
+        let warrior = party.find(p => p.job === 'warrior' && p.hp > 0 && p.isCovering);
+
+        if (warrior && target.id !== warrior.id) {
+          addLog(`戦士が身を挺して ${target.name} をかばった！`);
+          target = warrior;
+        }
+
+        let rawDmg = Math.max(1, enemy.atk - target.def);
+        if (target.isCovering) rawDmg = Math.max(1, Math.floor(rawDmg * 0.5));
+
+        target.hp -= rawDmg;
+        addLog(`${enemy.name} の攻撃！ ${target.name} は ${rawDmg} ダメージを受けた！`);
+
+        if (enemy.ailment && Math.random() < 0.35) {
+          if (enemy.ailment === 'poison' && target.status.poison === 0) {
+            target.status.poison = 3; addLog(`★ ${target.name} は [毒状態] になった！`);
+          } else if (enemy.ailment === 'paralyze' && target.status.paralyze === 0) {
+            target.status.paralyze = 2; addLog(`★ ${target.name} は [麻痺状態] になった！`);
+          } else if (enemy.ailment === 'darkness' && target.status.darkness === 0) {
+            target.status.darkness = 3; addLog(`★ ${target.name} は [暗闇状態] になった！`);
+          }
+        }
+      });
+
+      party.forEach(p => {
+        if (p.hp > 0 && p.status.poison > 0) {
+          let poiDmg = Math.max(2, Math.floor(p.maxHp * 0.08));
+          p.hp -= poiDmg;
+          p.status.poison--;
+          addLog(`[毒] ${p.name} に ${poiDmg} ダメージ！`);
+        }
+        if (p.status.paralyze > 0) p.status.paralyze--;
+        if (p.status.darkness > 0) p.status.darkness--;
+      });
+
+      if (party.every(p => p.hp <= 0)) {
+        addLog(`パーティ全員の命が尽きてしまった… GAME OVER`);
+        endGame();
+      } else {
+        resetTurnCommands();
+      }
+
+      updateDisplay();
+    }, delay + 400);
+  }
+
+  function onEnemyDefeated() {
+    let totalExp = enemies.reduce((sum, e) => sum + e.exp, 0);
+
+    addLog(`敵グループを全滅させた！`);
+    addLog(`全員が ${totalExp} の経験値を獲得！`);
+
+    party.forEach(p => {
+      if (p.hp > 0) gainExp(p, totalExp);
+    });
+
+    killCount++;
+    inBattle = false;
+
+    // 非戦闘時なのでセーブ・ロードを許可
+    document.getElementById('btn-save').disabled = false;
+    document.getElementById('btn-load').disabled = false;
+
+    let isBoss = enemies.some(e => e.isBoss);
+    if (isBoss) {
+      canUseInn = true;
+      if (killCount === 5) unlockWarrior = true;
+      if (killCount === 10) unlockCleric = true;
+      addLog(`★ ボス撃破！ 酒場と宿屋が利用可能になりました！`);
+    }
+
+    // 撃破時にオートセーブ
+    saveGame(true);
+
+    setTabsAccess(true);
+    document.getElementById('btn-next').style.display = 'block';
+    document.getElementById('turn-indicator').textContent = '戦闘勝利！次の行動を選んでください。';
+    updateDisplay();
+  }
+
+  function gainExp(char, amount) {
+    char.exp += amount;
+    if (char.exp >= char.nextExp) {
+      char.level++;
+      char.exp -= char.nextExp;
+      char.nextExp = Math.floor(char.nextExp * 1.5);
+
+      char.maxHp += 18;
+      char.maxMp += 8;
+      char.atk += 3;
+      char.def += 1;
+
+      const healHp = Math.floor(char.maxHp * 0.5);
+      const healMp = Math.floor(char.maxMp * 0.5);
+      char.hp = Math.min(char.maxHp, char.hp + healHp);
+      char.mp = Math.min(char.maxMp, char.mp + healMp);
+
+      addLog(`★ ${char.name} が Lv.${char.level} にレベルアップ！(HP/MP 50%回復)`);
+    }
+  }
+
+  function setTabsAccess(enable) {
+    document.getElementById('tab-bank-btn').disabled = !enable;
+    document.getElementById('tab-item-btn').disabled = !enable;
+    document.getElementById('tab-inn-btn').disabled = !(enable && canUseInn);
+    document.getElementById('tab-pub-btn').disabled = !(enable && (unlockWarrior || unlockCleric));
+  }
+
+  function updateDisplay() {
+    document.getElementById('gold').textContent = gold;
+    document.getElementById('kill-count').textContent = killCount;
+
+    const partyBox = document.getElementById('party-container');
+    partyBox.innerHTML = '';
+    party.forEach((p, idx) => {
+      const card = document.createElement('div');
+      card.className = `char-card ${p.hp <= 0 ? 'dead' : ''} ${(inBattle && currentTurnIdx === idx) ? 'active-turn' : ''}`;
+      
+      let statusTxt = '';
+      if (p.status.poison > 0) statusTxt += '<span class="status-bad">[毒]</span>';
+      if (p.status.paralyze > 0) statusTxt += '<span class="status-bad">[麻痺]</span>';
+      if (p.status.darkness > 0) statusTxt += '<span class="status-bad">[暗]</span>';
+
+      card.innerHTML = `
+        <div style="font-weight:bold; color:#ffd700;">${p.name} <span style="font-size:10px; color:#aaa;">Lv.${p.level}</span></div>
+        <div>HP: ${Math.max(0, p.hp)}/${p.maxHp} ${statusTxt}</div>
+        <div class="bar-bg"><div class="bar-fill-hp" style="width:${(Math.max(0, p.hp)/p.maxHp*100)}%;"></div></div>
+        <div>MP: ${Math.max(0, p.mp)}/${p.maxMp}</div>
+        <div class="bar-bg"><div class="bar-fill-mp" style="width:${(Math.max(0, p.mp)/p.maxMp*100)}%;"></div></div>
+      `;
+      partyBox.appendChild(card);
+    });
+
+    const enemiesBox = document.getElementById('enemies-container');
+    enemiesBox.innerHTML = '';
+    enemies.forEach(e => {
+      const row = document.createElement('div');
+      row.className = `enemy-row ${e.hp <= 0 ? 'dead' : ''}`;
+      row.innerHTML = `
+        <div style="display:flex; justify-content:space-between;">
+          <span>${e.name}</span>
+          <span>HP: ${Math.max(0, e.hp)}/${e.maxHp}</span>
+        </div>
+        <div class="bar-bg"><div class="bar-fill-hp" style="background-color:#e74c3c; width:${(Math.max(0, e.hp)/e.maxHp*100)}%;"></div></div>
+      `;
+      enemiesBox.appendChild(row);
+    });
+
+    renderPub();
+    document.getElementById('inn-price').textContent = party.length * 20;
+  }
+
+  function renderPub() {
+    const list = document.getElementById('pub-scout-list');
+    list.innerHTML = '';
+
+    const hasWarrior = party.some(p => p.job === 'warrior');
+    const hasCleric = party.some(p => p.job === 'cleric');
+
+    if (unlockWarrior && !hasWarrior) {
+      const btn = document.createElement('button');
+      btn.className = 'cmd-btn';
+      btn.innerHTML = '戦士 をパーティに迎える (攻撃・耐久特化)';
+      btn.onclick = () => scoutMember('warrior');
+      list.appendChild(btn);
+    }
+
+    if (unlockCleric && !hasCleric) {
+      const btn = document.createElement('button');
+      btn.className = 'cmd-btn';
+      btn.style.marginTop = '6px';
+      btn.innerHTML = '僧侶 をパーティに迎える (回復・支援特化)';
+      btn.onclick = () => scoutMember('cleric');
+      list.appendChild(btn);
+    }
+
+    if ((!unlockWarrior || hasWarrior) && (!unlockCleric || hasCleric)) {
+      list.innerHTML = '<p style="font-size:11px; color:#aaa;">現在勧誘できる冒険者はいません。</p>';
+    }
+  }
+
+  function scoutMember(job) {
+    if (job === 'warrior') {
+      party.push({
+        id: 'warrior', name: '戦士', job: 'warrior',
+        level: 5, hp: 140, maxHp: 140, mp: 20, maxMp: 20,
+        atk: 22, def: 8, spd: 4, exp: 0, nextExp: 50,
+        status: { poison: 0, paralyze: 0, darkness: 0 },
+        isCovering: false
+      });
+      addLog(`★ 戦士 が仲間に加わった！`);
+    } else if (job === 'cleric') {
+      party.push({
+        id: 'cleric', name: '僧侶', job: 'cleric',
+        level: 10, hp: 160, maxHp: 160, mp: 70, maxMp: 70,
+        atk: 18, def: 6, spd: 7, exp: 0, nextExp: 100,
+        status: { poison: 0, paralyze: 0, darkness: 0 },
+        isCovering: false
+      });
+      addLog(`★ 僧侶 が仲間に加わった！`);
+    }
+    saveGame(true);
+    updateDisplay();
+  }
+
+  function addLog(msg) {
+    const p = document.createElement('p');
+    p.style.margin = '2px 0';
+    p.textContent = msg;
+    logElement.appendChild(p);
+    logElement.scrollTop = logElement.scrollHeight;
+  }
+
+  function switchTab(tabName) {
+    if (inBattle && tabName !== 'battle') return;
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.action-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(`tab-${tabName}-btn`).classList.add('active');
+    document.getElementById(`panel-${tabName}`).classList.add('active');
+  }
+
+  function nextEnemy() {
+    spawnEnemy();
+    switchTab('battle');
+  }
+
+  function stayInn() {
+    if (isGameOver || inBattle) return;
+    const price = party.length * 20;
+    if (gold < price) { addLog('お金が足りません！'); return; }
+    gold -= price;
+    party.forEach(p => {
+      p.hp = p.maxHp;
+      p.mp = p.maxMp;
+      p.status.poison = 0; p.status.paralyze = 0; p.status.darkness = 0;
+    });
+    addLog(`【宿屋】ぐっすり眠って全員の HP・MP が全回復した！`);
+    saveGame(true);
+    updateDisplay();
+  }
+
+  function depositHP(amount) {
+    if (isGameOver || inBattle) return;
+    let hero = party.find(p => p.job === 'hero');
+    if (hero.hp <= amount) {
+      addLog(`【銀行】これ以上預けると勇者の命が尽きてしまいます！`);
+      return;
+    }
+    hero.hp -= amount;
+    gold += amount * 10;
+    addLog(`【銀行】勇者のHPを ${amount} 預け、${amount * 10} G を取得しました。`);
+    updateDisplay();
+  }
+
+  function withdrawHP(goldAmount) {
+    if (isGameOver || inBattle) return;
+    let hero = party.find(p => p.job === 'hero');
+    if (gold < goldAmount) { addLog(`【銀行】ゴールドが足りません！`); return; }
+    if (hero.hp >= hero.maxHp) { addLog(`【銀行】勇者のHPは既に満タンです！`); return; }
+
+    gold -= goldAmount;
+    hero.hp = Math.min(hero.maxHp, hero.hp + (goldAmount / 10));
+    addLog(`【銀行】${goldAmount} G を支払って 勇者のHPを回復しました。`);
+    updateDisplay();
+  }
+
+  function buyItem(type) {
+    if (isGameOver || inBattle) return;
+    let price = (type === 'herb') ? 150 : (type === 'greatHerb') ? 350 : 100;
+    if (gold < price) { addLog(`ゴールドが足りません！`); return; }
+    gold -= price;
+    items[type]++;
+    addLog(`アイテムを購入しました。`);
+    updateDisplay();
+  }
+
+  function endGame() {
+    isGameOver = true;
+    inBattle = false;
+    setTabsAccess(false);
+    document.getElementById('btn-save').disabled = true;
+    document.getElementById('btn-load').disabled = false;
+    document.getElementById('btn-next').style.display = 'none';
+    document.getElementById('btn-reset').style.display = 'block';
+  }
+
+  initGame();
+</script>
+
+</body>
+</html>
