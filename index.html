@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>—a–½’Ê’  - ƒZ[ƒu‹@”\‘Î‰”Å</title>
+  <title>é å‘½é€šå¸³ - ã‚»ãƒ¼ãƒ–æ©Ÿèƒ½å¯¾å¿œç‰ˆ</title>
   <style>
     body {
       background-color: #0d0e15;
@@ -205,88 +205,88 @@
 <body>
 
 <div id="game-container">
-  <h1>—a –½ ’Ê ’ </h1>
+  <h1>é  å‘½ é€š å¸³</h1>
 
-  <!-- ƒVƒXƒeƒ€ƒo[iƒZ[ƒu•ƒ[ƒhj -->
+  <!-- ã‚·ã‚¹ãƒ†ãƒ ãƒãƒ¼ï¼ˆã‚»ãƒ¼ãƒ–ï¼†ãƒ­ãƒ¼ãƒ‰ï¼‰ -->
   <div class="system-bar">
     <div style="font-size: 11px;">
-      Š‹à: <span id="gold" class="gold-text">0</span> G | Œ‚”j”: <span id="kill-count">0</span> ‘Ì
+      æ‰€æŒé‡‘: <span id="gold" class="gold-text">0</span> G | æ’ƒç ´æ•°: <span id="kill-count">0</span> ä½“
     </div>
     <div style="display: flex; gap: 4px;">
-      <button id="btn-save" class="cmd-btn" onclick="saveGame()">ƒZ[ƒu</button>
-      <button id="btn-load" class="cmd-btn" onclick="loadGame()">ƒ[ƒh</button>
-      <button id="btn-reset-data" class="cmd-btn" style="border-color: #e74c3c; color: #ff9999;" onclick="confirmReset()">Å‰‚©‚ç</button>
+      <button id="btn-save" class="cmd-btn" onclick="saveGame()">ã‚»ãƒ¼ãƒ–</button>
+      <button id="btn-load" class="cmd-btn" onclick="loadGame()">ãƒ­ãƒ¼ãƒ‰</button>
+      <button id="btn-reset-data" class="cmd-btn" style="border-color: #e74c3c; color: #ff9999;" onclick="confirmReset()">æœ€åˆã‹ã‚‰</button>
     </div>
   </div>
 
-  <!-- ƒp[ƒeƒBƒXƒe[ƒ^ƒX -->
+  <!-- ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ -->
   <div id="party-container" class="party-panel"></div>
 
-  <!-- “Gˆê——ƒXƒe[ƒ^ƒX -->
+  <!-- æ•µä¸€è¦§ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ -->
   <div id="enemies-container" class="enemies-panel"></div>
 
-  <!-- ƒƒbƒZ[ƒWƒƒO -->
+  <!-- ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ­ã‚° -->
   <div id="message-log"></div>
 
-  <!-- ƒ^ƒuØ‚è‘Ö‚¦ -->
+  <!-- ã‚¿ãƒ–åˆ‡ã‚Šæ›¿ãˆ -->
   <div class="nav-tabs">
-    <button id="tab-battle-btn" class="tab-btn active" onclick="switchTab('battle')">í“¬</button>
-    <button id="tab-pub-btn" class="tab-btn" onclick="switchTab('pub')" disabled>ğê</button>
-    <button id="tab-inn-btn" class="tab-btn" onclick="switchTab('inn')" disabled>h‰®</button>
-    <button id="tab-bank-btn" class="tab-btn" onclick="switchTab('bank')">—a–½‹âs</button>
-    <button id="tab-item-btn" class="tab-btn" onclick="switchTab('item')">“¹‹ï‰®</button>
+    <button id="tab-battle-btn" class="tab-btn active" onclick="switchTab('battle')">æˆ¦é—˜</button>
+    <button id="tab-pub-btn" class="tab-btn" onclick="switchTab('pub')" disabled>é…’å ´</button>
+    <button id="tab-inn-btn" class="tab-btn" onclick="switchTab('inn')" disabled>å®¿å±‹</button>
+    <button id="tab-bank-btn" class="tab-btn" onclick="switchTab('bank')">é å‘½éŠ€è¡Œ</button>
+    <button id="tab-item-btn" class="tab-btn" onclick="switchTab('item')">é“å…·å±‹</button>
   </div>
 
-  <!-- í“¬ƒpƒlƒ‹ -->
+  <!-- æˆ¦é—˜ãƒ‘ãƒãƒ« -->
   <div id="panel-battle" class="action-panel active">
-    <div id="turn-indicator" class="turn-indicator">—EÒ‚Ìs“®‚ğ‘I‘ğ‚µ‚Ä‚­‚¾‚³‚¢</div>
+    <div id="turn-indicator" class="turn-indicator">å‹‡è€…ã®è¡Œå‹•ã‚’é¸æŠã—ã¦ãã ã•ã„</div>
     
-    <!-- ƒ^[ƒQƒbƒg‘I‘ğƒGƒŠƒA -->
+    <!-- ã‚¿ãƒ¼ã‚²ãƒƒãƒˆé¸æŠã‚¨ãƒªã‚¢ -->
     <div id="target-select" class="target-select-area">
-      <div style="font-size: 11px; margin-bottom: 4px;" id="target-select-title">‘ÎÛ‚ğ‘I‘ğ‚µ‚Ä‚­‚¾‚³‚¢:</div>
+      <div style="font-size: 11px; margin-bottom: 4px;" id="target-select-title">å¯¾è±¡ã‚’é¸æŠã—ã¦ãã ã•ã„:</div>
       <div id="target-buttons" class="grid-2"></div>
     </div>
 
     <div id="command-buttons" class="grid-2"></div>
 
-    <button id="btn-next" class="cmd-btn" onclick="nextEnemy()" style="display:none; width: 100%; margin-top: 8px;">Ÿ‚Ì“G‚É’§‚Ş</button>
-    <button id="btn-reset" class="cmd-btn" onclick="initGame()" style="display:none; width: 100%; margin-top: 8px;">Å‰‚©‚ç‚â‚è’¼‚·</button>
+    <button id="btn-next" class="cmd-btn" onclick="nextEnemy()" style="display:none; width: 100%; margin-top: 8px;">æ¬¡ã®æ•µã«æŒ‘ã‚€</button>
+    <button id="btn-reset" class="cmd-btn" onclick="initGame()" style="display:none; width: 100%; margin-top: 8px;">æœ€åˆã‹ã‚‰ã‚„ã‚Šç›´ã™</button>
   </div>
 
-  <!-- ğêƒpƒlƒ‹ -->
+  <!-- é…’å ´ãƒ‘ãƒãƒ« -->
   <div id="panel-pub" class="action-panel">
     <div style="text-align: center; padding: 10px;">
-      <p style="font-size: 13px; color: #ffd700; font-weight: bold; margin-bottom: 8px;">y–`Œ¯Òğêz</p>
+      <p style="font-size: 13px; color: #ffd700; font-weight: bold; margin-bottom: 8px;">ã€å†’é™ºè€…é…’å ´ã€‘</p>
       <div id="pub-scout-list"></div>
     </div>
   </div>
 
-  <!-- h‰®ƒpƒlƒ‹ -->
+  <!-- å®¿å±‹ãƒ‘ãƒãƒ« -->
   <div id="panel-inn" class="action-panel">
     <div style="text-align: center; padding: 10px;">
-      <p style="font-size: 13px; color: #ffd700; font-weight: bold; margin-bottom: 8px;">yˆÀ‚ç‚¬‚Ìh‰®z</p>
-      <p style="font-size: 11px; color: #ccc; margin-bottom: 12px;">‘Sˆõ‚Ì HPEMP ‚ª‘S‰ñ•œ‚µAó‘ÔˆÙí‚à¡‚è‚Ü‚·B</p>
-      <button id="btn-stay-inn" class="cmd-btn" onclick="stayInn()" style="padding: 10px 20px;">ˆê”‘‚·‚é (”ï—p: <span id="inn-price">20</span> G)</button>
+      <p style="font-size: 13px; color: #ffd700; font-weight: bold; margin-bottom: 8px;">ã€å®‰ã‚‰ãã®å®¿å±‹ã€‘</p>
+      <p style="font-size: 11px; color: #ccc; margin-bottom: 12px;">å…¨å“¡ã® HPãƒ»MP ãŒå…¨å›å¾©ã—ã€çŠ¶æ…‹ç•°å¸¸ã‚‚æ²»ã‚Šã¾ã™ã€‚</p>
+      <button id="btn-stay-inn" class="cmd-btn" onclick="stayInn()" style="padding: 10px 20px;">ä¸€æ³Šã™ã‚‹ (è²»ç”¨: <span id="inn-price">20</span> G)</button>
     </div>
   </div>
 
-  <!-- ‹âsƒpƒlƒ‹ -->
+  <!-- éŠ€è¡Œãƒ‘ãƒãƒ« -->
   <div id="panel-bank" class="action-panel">
-    <p style="font-size: 11px; color: #ffd700; text-align: center;">¦æˆø‚Å‚«‚é–½iHPj‚Í—EÒ‚Ì‚à‚ÌŒÀ’è‚Å‚·B</p>
+    <p style="font-size: 11px; color: #ffd700; text-align: center;">â€»å–å¼•ã§ãã‚‹å‘½ï¼ˆHPï¼‰ã¯å‹‡è€…ã®ã‚‚ã®é™å®šã§ã™ã€‚</p>
     <div class="grid-2">
-      <button class="cmd-btn" onclick="depositHP(10)">—EÒ‚ÌHP10‚ğ—a‚¯‚é<br>(+100G)</button>
-      <button class="cmd-btn" onclick="depositHP(50)">—EÒ‚ÌHP50‚ğ—a‚¯‚é<br>(+500G)</button>
-      <button class="cmd-btn" onclick="withdrawHP(100)">100G ˆø‚«o‚·<br>(—EÒHP+10)</button>
-      <button class="cmd-btn" onclick="withdrawHP(500)">500G ˆø‚«o‚·<br>(—EÒHP+50)</button>
+      <button class="cmd-btn" onclick="depositHP(10)">å‹‡è€…ã®HP10ã‚’é ã‘ã‚‹<br>(+100G)</button>
+      <button class="cmd-btn" onclick="depositHP(50)">å‹‡è€…ã®HP50ã‚’é ã‘ã‚‹<br>(+500G)</button>
+      <button class="cmd-btn" onclick="withdrawHP(100)">100G å¼•ãå‡ºã™<br>(å‹‡è€…HP+10)</button>
+      <button class="cmd-btn" onclick="withdrawHP(500)">500G å¼•ãå‡ºã™<br>(å‹‡è€…HP+50)</button>
     </div>
   </div>
 
-  <!-- “¹‹ï‰®ƒpƒlƒ‹ -->
+  <!-- é“å…·å±‹ãƒ‘ãƒãƒ« -->
   <div id="panel-item" class="action-panel">
     <div class="grid-2">
-      <button class="cmd-btn" onclick="buyItem('herb')">–ò‘ (150G)</button>
-      <button class="cmd-btn" onclick="buyItem('greatHerb')">ã–ò‘ (350G)</button>
-      <button class="cmd-btn" onclick="buyItem('antidote')">‚Ç‚­‚¯‚µ‘ (100G)</button>
+      <button class="cmd-btn" onclick="buyItem('herb')">è–¬è‰ (150G)</button>
+      <button class="cmd-btn" onclick="buyItem('greatHerb')">ä¸Šè–¬è‰ (350G)</button>
+      <button class="cmd-btn" onclick="buyItem('antidote')">ã©ãã‘ã—è‰ (100G)</button>
     </div>
   </div>
 </div>
@@ -316,10 +316,10 @@
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  // ƒZ[ƒu‹@”\
+  // ã‚»ãƒ¼ãƒ–æ©Ÿèƒ½
   function saveGame(isAuto = false) {
     if (inBattle) {
-      if (!isAuto) addLog("yƒVƒXƒeƒ€zí“¬’†‚ÍƒZ[ƒu‚Å‚«‚Ü‚¹‚ñI");
+      if (!isAuto) addLog("ã€ã‚·ã‚¹ãƒ†ãƒ ã€‘æˆ¦é—˜ä¸­ã¯ã‚»ãƒ¼ãƒ–ã§ãã¾ã›ã‚“ï¼");
       return;
     }
 
@@ -336,25 +336,25 @@
     try {
       localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
       if (!isAuto) {
-        addLog("yƒVƒXƒeƒ€zƒQ[ƒ€ƒf[ƒ^‚ğƒZ[ƒu‚µ‚Ü‚µ‚½B");
+        addLog("ã€ã‚·ã‚¹ãƒ†ãƒ ã€‘ã‚²ãƒ¼ãƒ ãƒ‡ãƒ¼ã‚¿ã‚’ã‚»ãƒ¼ãƒ–ã—ã¾ã—ãŸã€‚");
       } else {
-        addLog("yƒVƒXƒeƒ€zƒI[ƒgƒZ[ƒu‚³‚ê‚Ü‚µ‚½B");
+        addLog("ã€ã‚·ã‚¹ãƒ†ãƒ ã€‘ã‚ªãƒ¼ãƒˆã‚»ãƒ¼ãƒ–ã•ã‚Œã¾ã—ãŸã€‚");
       }
     } catch (e) {
-      addLog("yƒGƒ‰[zƒZ[ƒu‚É¸”s‚µ‚Ü‚µ‚½B");
+      addLog("ã€ã‚¨ãƒ©ãƒ¼ã€‘ã‚»ãƒ¼ãƒ–ã«å¤±æ•—ã—ã¾ã—ãŸã€‚");
     }
   }
 
-  // ƒ[ƒh‹@”\
+  // ãƒ­ãƒ¼ãƒ‰æ©Ÿèƒ½
   function loadGame() {
     if (inBattle) {
-      addLog("yƒVƒXƒeƒ€zí“¬’†‚Íƒ[ƒh‚Å‚«‚Ü‚¹‚ñI");
+      addLog("ã€ã‚·ã‚¹ãƒ†ãƒ ã€‘æˆ¦é—˜ä¸­ã¯ãƒ­ãƒ¼ãƒ‰ã§ãã¾ã›ã‚“ï¼");
       return;
     }
 
     const json = localStorage.getItem(SAVE_KEY);
     if (!json) {
-      addLog("yƒVƒXƒeƒ€zƒZ[ƒuƒf[ƒ^‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB");
+      addLog("ã€ã‚·ã‚¹ãƒ†ãƒ ã€‘ã‚»ãƒ¼ãƒ–ãƒ‡ãƒ¼ã‚¿ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚");
       return;
     }
 
@@ -370,17 +370,17 @@
 
       isGameOver = false;
       logElement.innerHTML = '';
-      addLog("yƒVƒXƒeƒ€zƒZ[ƒuƒf[ƒ^‚ğƒ[ƒh‚µ‚Ü‚µ‚½I");
+      addLog("ã€ã‚·ã‚¹ãƒ†ãƒ ã€‘ã‚»ãƒ¼ãƒ–ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ­ãƒ¼ãƒ‰ã—ã¾ã—ãŸï¼");
 
       spawnEnemy();
       updateDisplay();
     } catch (e) {
-      addLog("yƒGƒ‰[zƒ[ƒh‚É¸”s‚µ‚Ü‚µ‚½Bƒf[ƒ^‚ª”j‘¹‚µ‚Ä‚¢‚Ü‚·B");
+      addLog("ã€ã‚¨ãƒ©ãƒ¼ã€‘ãƒ­ãƒ¼ãƒ‰ã«å¤±æ•—ã—ã¾ã—ãŸã€‚ãƒ‡ãƒ¼ã‚¿ãŒç ´æã—ã¦ã„ã¾ã™ã€‚");
     }
   }
 
   function confirmReset() {
-    if (confirm("ƒZ[ƒuƒf[ƒ^‚ğíœ‚µ‚ÄÅ‰‚©‚ç‚â‚è’¼‚µ‚Ü‚·‚©H")) {
+    if (confirm("ã‚»ãƒ¼ãƒ–ãƒ‡ãƒ¼ã‚¿ã‚’å‰Šé™¤ã—ã¦æœ€åˆã‹ã‚‰ã‚„ã‚Šç›´ã—ã¾ã™ã‹ï¼Ÿ")) {
       localStorage.removeItem(SAVE_KEY);
       initGame();
     }
@@ -389,7 +389,7 @@
   function initGame() {
     party = [
       {
-        id: 'hero', name: '—EÒ', job: 'hero',
+        id: 'hero', name: 'å‹‡è€…', job: 'hero',
         level: 1, hp: 100, maxHp: 100, mp: 30, maxMp: 30,
         atk: 12, def: 3, spd: 6, exp: 0, nextExp: 10,
         status: { poison: 0, paralyze: 0, darkness: 0 },
@@ -406,11 +406,11 @@
     items = { herb: 2, greatHerb: 0, antidote: 1 };
 
     logElement.innerHTML = '';
-    addLog('y—a–½’Ê’ zV‚½‚È–`Œ¯‚ªn‚Ü‚Á‚½I');
+    addLog('ã€é å‘½é€šå¸³ã€‘æ–°ãŸãªå†’é™ºãŒå§‹ã¾ã£ãŸï¼');
 
-    // ‹N“®‚Éƒ[ƒh‚Å‚«‚é‚©Šm”F
+    // èµ·å‹•æ™‚ã«ãƒ­ãƒ¼ãƒ‰ã§ãã‚‹ã‹ç¢ºèª
     if (localStorage.getItem(SAVE_KEY)) {
-      addLog('¦•Û‘¶‚³‚ê‚½ƒf[ƒ^‚ª‚ ‚è‚Ü‚·Buƒ[ƒhvƒ{ƒ^ƒ“‚ÅÄŠJ‚Å‚«‚Ü‚·B');
+      addLog('â€»ä¿å­˜ã•ã‚ŒãŸãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚Šã¾ã™ã€‚ã€Œãƒ­ãƒ¼ãƒ‰ã€ãƒœã‚¿ãƒ³ã§å†é–‹ã§ãã¾ã™ã€‚');
     }
 
     spawnEnemy();
@@ -423,7 +423,7 @@
     canUseInn = false;
     enemies = [];
 
-    // í“¬’†‚ÍƒZ[ƒu•s‰Â‚É
+    // æˆ¦é—˜ä¸­ã¯ã‚»ãƒ¼ãƒ–ä¸å¯ã«
     document.getElementById('btn-save').disabled = true;
     document.getElementById('btn-load').disabled = true;
 
@@ -433,13 +433,13 @@
 
     if (isBoss) {
       if (killCount + 1 === 5) {
-        enemies.push({ id: 0, name: "yBOSSz“Å—³ƒfƒrƒ‹", hp: 250, maxHp: 250, atk: 20, exp: 100, isBoss: true, ailment: 'poison' });
+        enemies.push({ id: 0, name: "ã€BOSSã€‘æ¯’ç«œãƒ‡ãƒ“ãƒ«", hp: 250, maxHp: 250, atk: 20, exp: 100, isBoss: true, ailment: 'poison' });
       } else if (killCount + 1 === 10) {
-        enemies.push({ id: 0, name: "yBOSSz–ƒáƒ‚Ì‘å€_", hp: 550, maxHp: 550, atk: 35, exp: 280, isBoss: true, ailment: 'paralyze' });
+        enemies.push({ id: 0, name: "ã€BOSSã€‘éº»ç—ºã®å¤§æ­»ç¥", hp: 550, maxHp: 550, atk: 35, exp: 280, isBoss: true, ailment: 'paralyze' });
       } else {
-        enemies.push({ id: 0, name: "yBOSSz½•‚Ì–‚‰¤", hp: 1200, maxHp: 1200, atk: 60, exp: 700, isBoss: true, ailment: 'darkness' });
+        enemies.push({ id: 0, name: "ã€BOSSã€‘æ¼†é»’ã®é­”ç‹", hp: 1200, maxHp: 1200, atk: 60, exp: 700, isBoss: true, ailment: 'darkness' });
       }
-      addLog(`š WARNINGIƒ{ƒX ${enemies[0].name} ‚ª—§‚¿Ç‚ª‚éI`);
+      addLog(`â˜… WARNINGï¼ãƒœã‚¹ ${enemies[0].name} ãŒç«‹ã¡å¡ãŒã‚‹ï¼`);
     } else {
       let count = 1;
       if (killCount >= 10) {
@@ -448,7 +448,7 @@
 
       const labels = ['A', 'B', 'C'];
       for (let i = 0; i < count; i++) {
-        let nameStr = (count > 1) ? `–‚•¨ ${labels[i]}` : `–‚•¨ (Lv.${killCount + 1})`;
+        let nameStr = (count > 1) ? `é­”ç‰© ${labels[i]}` : `é­”ç‰© (Lv.${killCount + 1})`;
         enemies.push({
           id: i,
           name: nameStr,
@@ -462,9 +462,9 @@
       }
 
       if (count > 1) {
-        addLog(`–‚•¨‚ª ${count} ‘ÌŒQ‚ê‚ğ¬‚µ‚ÄoŒ»‚µ‚½I`);
+        addLog(`é­”ç‰©ãŒ ${count} ä½“ç¾¤ã‚Œã‚’æˆã—ã¦å‡ºç¾ã—ãŸï¼`);
       } else {
-        addLog(`${enemies[0].name} ‚ªŒ»‚ê‚½I`);
+        addLog(`${enemies[0].name} ãŒç¾ã‚ŒãŸï¼`);
       }
     }
 
@@ -487,29 +487,29 @@
     cmdBox.innerHTML = '';
 
     if (currentTurnIdx >= turnQueue.length) {
-      document.getElementById('turn-indicator').textContent = 's“®ˆ—’†...';
+      document.getElementById('turn-indicator').textContent = 'è¡Œå‹•å‡¦ç†ä¸­...';
       executeTurn();
       return;
     }
 
     const char = turnQueue[currentTurnIdx];
-    document.getElementById('turn-indicator').textContent = `${char.name} (${char.job === 'hero' ? '—EÒ' : char.job === 'warrior' ? 'ím' : '‘m—µ'}) ‚Ìs“®‚ğ‘I‘ğ`;
+    document.getElementById('turn-indicator').textContent = `${char.name} (${char.job === 'hero' ? 'å‹‡è€…' : char.job === 'warrior' ? 'æˆ¦å£«' : 'åƒ§ä¾¶'}) ã®è¡Œå‹•ã‚’é¸æŠ`;
 
     if (char.job === 'hero') {
-      addCmdBtn(cmdBox, '‚±‚¤‚°‚«', () => promptEnemyTarget(char, { type: 'attack' }));
-      addCmdBtn(cmdBox, 'ƒtƒ@ƒCƒA (MP5)', () => promptEnemyTarget(char, { type: 'fire', mp: 5 }), char.mp < 5);
-      addCmdBtn(cmdBox, 'ƒMƒKƒtƒŒƒCƒ€ (MP15)', () => selectAction(char, { type: 'giga', mp: 15 }), char.mp < 15);
-      addCmdBtn(cmdBox, '–ò‘‚ğg‚¤', () => promptPartyTarget(char, { type: 'herb' }), items.herb <= 0);
+      addCmdBtn(cmdBox, 'ã“ã†ã’ã', () => promptEnemyTarget(char, { type: 'attack' }));
+      addCmdBtn(cmdBox, 'ãƒ•ã‚¡ã‚¤ã‚¢ (MP5)', () => promptEnemyTarget(char, { type: 'fire', mp: 5 }), char.mp < 5);
+      addCmdBtn(cmdBox, 'ã‚®ã‚¬ãƒ•ãƒ¬ã‚¤ãƒ  (MP15)', () => selectAction(char, { type: 'giga', mp: 15 }), char.mp < 15);
+      addCmdBtn(cmdBox, 'è–¬è‰ã‚’ä½¿ã†', () => promptPartyTarget(char, { type: 'herb' }), items.herb <= 0);
     } else if (char.job === 'warrior') {
-      addCmdBtn(cmdBox, '‚±‚¤‚°‚«', () => promptEnemyTarget(char, { type: 'attack' }));
-      addCmdBtn(cmdBox, '‚©‚Î‚¤ (MP3)', () => selectAction(char, { type: 'cover', mp: 3 }), char.mp < 3);
-      addCmdBtn(cmdBox, 'ŸÓg‚ÌˆêŒ‚ (MP6)', () => promptEnemyTarget(char, { type: 'heavy_atk', mp: 6 }), char.mp < 6);
-      addCmdBtn(cmdBox, '–ò‘‚ğg‚¤', () => promptPartyTarget(char, { type: 'herb' }), items.herb <= 0);
+      addCmdBtn(cmdBox, 'ã“ã†ã’ã', () => promptEnemyTarget(char, { type: 'attack' }));
+      addCmdBtn(cmdBox, 'ã‹ã°ã† (MP3)', () => selectAction(char, { type: 'cover', mp: 3 }), char.mp < 3);
+      addCmdBtn(cmdBox, 'æ¸¾èº«ã®ä¸€æ’ƒ (MP6)', () => promptEnemyTarget(char, { type: 'heavy_atk', mp: 6 }), char.mp < 6);
+      addCmdBtn(cmdBox, 'è–¬è‰ã‚’ä½¿ã†', () => promptPartyTarget(char, { type: 'herb' }), items.herb <= 0);
     } else if (char.job === 'cleric') {
-      addCmdBtn(cmdBox, '‚±‚¤‚°‚«', () => promptEnemyTarget(char, { type: 'attack' }));
-      addCmdBtn(cmdBox, 'ƒq[ƒ‹ (MP5)', () => promptPartyTarget(char, { type: 'heal', mp: 5 }), char.mp < 5);
-      addCmdBtn(cmdBox, '‘S‘Ì‰ñ•œ (MP14)', () => selectAction(char, { type: 'heal_all', mp: 14 }), char.mp < 14);
-      addCmdBtn(cmdBox, 'ƒLƒAƒŠ[ (MP6)', () => selectAction(char, { type: 'kiari', mp: 6 }), char.mp < 6);
+      addCmdBtn(cmdBox, 'ã“ã†ã’ã', () => promptEnemyTarget(char, { type: 'attack' }));
+      addCmdBtn(cmdBox, 'ãƒ’ãƒ¼ãƒ« (MP5)', () => promptPartyTarget(char, { type: 'heal', mp: 5 }), char.mp < 5);
+      addCmdBtn(cmdBox, 'å…¨ä½“å›å¾© (MP14)', () => selectAction(char, { type: 'heal_all', mp: 14 }), char.mp < 14);
+      addCmdBtn(cmdBox, 'ã‚­ã‚¢ãƒªãƒ¼ (MP6)', () => selectAction(char, { type: 'kiari', mp: 6 }), char.mp < 6);
     }
   }
 
@@ -530,7 +530,7 @@
       return;
     }
 
-    document.getElementById('target-select-title').textContent = 'UŒ‚‚·‚é“G‚ğ‘I‘ğ‚µ‚Ä‚­‚¾‚³‚¢:';
+    document.getElementById('target-select-title').textContent = 'æ”»æ’ƒã™ã‚‹æ•µã‚’é¸æŠã—ã¦ãã ã•ã„:';
     const targetBox = document.getElementById('target-buttons');
     targetBox.innerHTML = '';
     document.getElementById('target-select').style.display = 'block';
@@ -549,7 +549,7 @@
   }
 
   function promptPartyTarget(actor, action) {
-    document.getElementById('target-select-title').textContent = '‘ÎÛ‚Ì’‡ŠÔ‚ğ‘I‘ğ‚µ‚Ä‚­‚¾‚³‚¢:';
+    document.getElementById('target-select-title').textContent = 'å¯¾è±¡ã®ä»²é–“ã‚’é¸æŠã—ã¦ãã ã•ã„:';
     const targetBox = document.getElementById('target-buttons');
     targetBox.innerHTML = '';
     document.getElementById('target-select').style.display = 'block';
@@ -584,7 +584,7 @@
         if (enemies.every(e => e.hp <= 0)) return;
 
         if (act.actor.status.paralyze > 0 && Math.random() < 0.5) {
-          addLog(`${act.actor.name} ‚Í‘Ì‚ªáƒ‚ê‚Ä“®‚¯‚È‚¢I`);
+          addLog(`${act.actor.name} ã¯ä½“ãŒç—ºã‚Œã¦å‹•ã‘ãªã„ï¼`);
           return;
         }
 
@@ -597,48 +597,48 @@
         if (a.type === 'attack') {
           let dmg = Math.max(1, act.actor.atk - Math.floor(getRandomInt(0, 2)));
           if (act.actor.status.darkness > 0 && Math.random() < 0.5) {
-            addLog(`${act.actor.name} ‚ÌUŒ‚‚ÍˆÃˆÅ‚ÅŠO‚ê‚½I`);
+            addLog(`${act.actor.name} ã®æ”»æ’ƒã¯æš—é—‡ã§å¤–ã‚ŒãŸï¼`);
           } else {
             targetEnemy.hp -= dmg;
-            addLog(`${act.actor.name} ‚ÌUŒ‚I ${targetEnemy.name} ‚É ${dmg} ƒ_ƒ[ƒWI`);
+            addLog(`${act.actor.name} ã®æ”»æ’ƒï¼ ${targetEnemy.name} ã« ${dmg} ãƒ€ãƒ¡ãƒ¼ã‚¸ï¼`);
           }
         } else if (a.type === 'fire') {
           let dmg = 35 + Math.floor(act.actor.atk * 0.8);
           targetEnemy.hp -= dmg;
-          addLog(`${act.actor.name} ‚Ìyƒtƒ@ƒCƒAzI ${targetEnemy.name} ‚É ${dmg} ƒ_ƒ[ƒWI`);
+          addLog(`${act.actor.name} ã®ã€ãƒ•ã‚¡ã‚¤ã‚¢ã€‘ï¼ ${targetEnemy.name} ã« ${dmg} ãƒ€ãƒ¡ãƒ¼ã‚¸ï¼`);
         } else if (a.type === 'giga') {
           let dmg = 80 + Math.floor(act.actor.atk * 1.3);
           enemies.filter(e => e.hp > 0).forEach(e => e.hp -= dmg);
-          addLog(`${act.actor.name} ‚ÌyƒMƒKƒtƒŒƒCƒ€zI “G‘S‘Ì‚É ${dmg} ‚Ì‘åƒ_ƒ[ƒWI`);
+          addLog(`${act.actor.name} ã®ã€ã‚®ã‚¬ãƒ•ãƒ¬ã‚¤ãƒ ã€‘ï¼ æ•µå…¨ä½“ã« ${dmg} ã®å¤§ãƒ€ãƒ¡ãƒ¼ã‚¸ï¼`);
         } else if (a.type === 'heavy_atk') {
           let dmg = Math.floor(act.actor.atk * 1.8);
           targetEnemy.hp -= dmg;
-          addLog(`${act.actor.name} ‚ÌyŸÓg‚ÌˆêŒ‚zI ${targetEnemy.name} ‚É ${dmg} ƒ_ƒ[ƒWI`);
+          addLog(`${act.actor.name} ã®ã€æ¸¾èº«ã®ä¸€æ’ƒã€‘ï¼ ${targetEnemy.name} ã« ${dmg} ãƒ€ãƒ¡ãƒ¼ã‚¸ï¼`);
         } else if (a.type === 'cover') {
           act.actor.isCovering = true;
-          addLog(`${act.actor.name} ‚Íy‚©‚Î‚¤zp¨‚ğ‚Æ‚Á‚½I`);
+          addLog(`${act.actor.name} ã¯ã€ã‹ã°ã†ã€‘å§¿å‹¢ã‚’ã¨ã£ãŸï¼`);
         } else if (a.type === 'heal') {
           let target = party.find(p => p.id === a.targetPartyId);
           if (target) {
             target.hp = Math.min(target.maxHp, target.hp + 80);
-            addLog(`${act.actor.name} ‚Í ${target.name} ‚ÌHP‚ğ 80 ‰ñ•œ‚µ‚½I`);
+            addLog(`${act.actor.name} ã¯ ${target.name} ã®HPã‚’ 80 å›å¾©ã—ãŸï¼`);
           }
         } else if (a.type === 'heal_all') {
           party.forEach(p => {
             if (p.hp > 0) p.hp = Math.min(p.maxHp, p.hp + 50);
           });
-          addLog(`${act.actor.name} ‚Ìy‘S‘Ì‰ñ•œzI ‘Sˆõ‚ÌHP‚ª50‰ñ•œI`);
+          addLog(`${act.actor.name} ã®ã€å…¨ä½“å›å¾©ã€‘ï¼ å…¨å“¡ã®HPãŒ50å›å¾©ï¼`);
         } else if (a.type === 'kiari') {
           party.forEach(p => {
             p.status.poison = 0; p.status.paralyze = 0; p.status.darkness = 0;
           });
-          addLog(`${act.actor.name} ‚ÌyƒLƒAƒŠ[zI ‘Sˆõ‚Ìó‘ÔˆÙí‚ªŠ®¡‚µ‚½I`);
+          addLog(`${act.actor.name} ã®ã€ã‚­ã‚¢ãƒªãƒ¼ã€‘ï¼ å…¨å“¡ã®çŠ¶æ…‹ç•°å¸¸ãŒå®Œæ²»ã—ãŸï¼`);
         } else if (a.type === 'herb') {
           items.herb--;
           let target = party.find(p => p.id === a.targetPartyId);
           if (target) {
             target.hp = Math.min(target.maxHp, target.hp + 30);
-            addLog(`${act.actor.name} ‚Í–ò‘‚ğ ${target.name} ‚Ég—pI (HP+30)`);
+            addLog(`${act.actor.name} ã¯è–¬è‰ã‚’ ${target.name} ã«ä½¿ç”¨ï¼ (HP+30)`);
           }
         }
 
@@ -663,7 +663,7 @@
         let warrior = party.find(p => p.job === 'warrior' && p.hp > 0 && p.isCovering);
 
         if (warrior && target.id !== warrior.id) {
-          addLog(`ím‚ªg‚ğ’ğ‚µ‚Ä ${target.name} ‚ğ‚©‚Î‚Á‚½I`);
+          addLog(`æˆ¦å£«ãŒèº«ã‚’æŒºã—ã¦ ${target.name} ã‚’ã‹ã°ã£ãŸï¼`);
           target = warrior;
         }
 
@@ -671,15 +671,15 @@
         if (target.isCovering) rawDmg = Math.max(1, Math.floor(rawDmg * 0.5));
 
         target.hp -= rawDmg;
-        addLog(`${enemy.name} ‚ÌUŒ‚I ${target.name} ‚Í ${rawDmg} ƒ_ƒ[ƒW‚ğó‚¯‚½I`);
+        addLog(`${enemy.name} ã®æ”»æ’ƒï¼ ${target.name} ã¯ ${rawDmg} ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ãŸï¼`);
 
         if (enemy.ailment && Math.random() < 0.35) {
           if (enemy.ailment === 'poison' && target.status.poison === 0) {
-            target.status.poison = 3; addLog(`š ${target.name} ‚Í [“Åó‘Ô] ‚É‚È‚Á‚½I`);
+            target.status.poison = 3; addLog(`â˜… ${target.name} ã¯ [æ¯’çŠ¶æ…‹] ã«ãªã£ãŸï¼`);
           } else if (enemy.ailment === 'paralyze' && target.status.paralyze === 0) {
-            target.status.paralyze = 2; addLog(`š ${target.name} ‚Í [–ƒáƒó‘Ô] ‚É‚È‚Á‚½I`);
+            target.status.paralyze = 2; addLog(`â˜… ${target.name} ã¯ [éº»ç—ºçŠ¶æ…‹] ã«ãªã£ãŸï¼`);
           } else if (enemy.ailment === 'darkness' && target.status.darkness === 0) {
-            target.status.darkness = 3; addLog(`š ${target.name} ‚Í [ˆÃˆÅó‘Ô] ‚É‚È‚Á‚½I`);
+            target.status.darkness = 3; addLog(`â˜… ${target.name} ã¯ [æš—é—‡çŠ¶æ…‹] ã«ãªã£ãŸï¼`);
           }
         }
       });
@@ -689,14 +689,14 @@
           let poiDmg = Math.max(2, Math.floor(p.maxHp * 0.08));
           p.hp -= poiDmg;
           p.status.poison--;
-          addLog(`[“Å] ${p.name} ‚É ${poiDmg} ƒ_ƒ[ƒWI`);
+          addLog(`[æ¯’] ${p.name} ã« ${poiDmg} ãƒ€ãƒ¡ãƒ¼ã‚¸ï¼`);
         }
         if (p.status.paralyze > 0) p.status.paralyze--;
         if (p.status.darkness > 0) p.status.darkness--;
       });
 
       if (party.every(p => p.hp <= 0)) {
-        addLog(`ƒp[ƒeƒB‘Sˆõ‚Ì–½‚ªs‚«‚Ä‚µ‚Ü‚Á‚½c GAME OVER`);
+        addLog(`ãƒ‘ãƒ¼ãƒ†ã‚£å…¨å“¡ã®å‘½ãŒå°½ãã¦ã—ã¾ã£ãŸâ€¦ GAME OVER`);
         endGame();
       } else {
         resetTurnCommands();
@@ -709,8 +709,8 @@
   function onEnemyDefeated() {
     let totalExp = enemies.reduce((sum, e) => sum + e.exp, 0);
 
-    addLog(`“GƒOƒ‹[ƒv‚ğ‘S–Å‚³‚¹‚½I`);
-    addLog(`‘Sˆõ‚ª ${totalExp} ‚ÌŒoŒ±’l‚ğŠl“¾I`);
+    addLog(`æ•µã‚°ãƒ«ãƒ¼ãƒ—ã‚’å…¨æ»…ã•ã›ãŸï¼`);
+    addLog(`å…¨å“¡ãŒ ${totalExp} ã®çµŒé¨“å€¤ã‚’ç²å¾—ï¼`);
 
     party.forEach(p => {
       if (p.hp > 0) gainExp(p, totalExp);
@@ -719,7 +719,7 @@
     killCount++;
     inBattle = false;
 
-    // ”ñí“¬‚È‚Ì‚ÅƒZ[ƒuEƒ[ƒh‚ğ‹–‰Â
+    // éæˆ¦é—˜æ™‚ãªã®ã§ã‚»ãƒ¼ãƒ–ãƒ»ãƒ­ãƒ¼ãƒ‰ã‚’è¨±å¯
     document.getElementById('btn-save').disabled = false;
     document.getElementById('btn-load').disabled = false;
 
@@ -728,15 +728,15 @@
       canUseInn = true;
       if (killCount === 5) unlockWarrior = true;
       if (killCount === 10) unlockCleric = true;
-      addLog(`š ƒ{ƒXŒ‚”jI ğê‚Æh‰®‚ª—˜—p‰Â”\‚É‚È‚è‚Ü‚µ‚½I`);
+      addLog(`â˜… ãƒœã‚¹æ’ƒç ´ï¼ é…’å ´ã¨å®¿å±‹ãŒåˆ©ç”¨å¯èƒ½ã«ãªã‚Šã¾ã—ãŸï¼`);
     }
 
-    // Œ‚”j‚ÉƒI[ƒgƒZ[ƒu
+    // æ’ƒç ´æ™‚ã«ã‚ªãƒ¼ãƒˆã‚»ãƒ¼ãƒ–
     saveGame(true);
 
     setTabsAccess(true);
     document.getElementById('btn-next').style.display = 'block';
-    document.getElementById('turn-indicator').textContent = 'í“¬Ÿ—˜IŸ‚Ìs“®‚ğ‘I‚ñ‚Å‚­‚¾‚³‚¢B';
+    document.getElementById('turn-indicator').textContent = 'æˆ¦é—˜å‹åˆ©ï¼æ¬¡ã®è¡Œå‹•ã‚’é¸ã‚“ã§ãã ã•ã„ã€‚';
     updateDisplay();
   }
 
@@ -757,7 +757,7 @@
       char.hp = Math.min(char.maxHp, char.hp + healHp);
       char.mp = Math.min(char.maxMp, char.mp + healMp);
 
-      addLog(`š ${char.name} ‚ª Lv.${char.level} ‚ÉƒŒƒxƒ‹ƒAƒbƒvI(HP/MP 50%‰ñ•œ)`);
+      addLog(`â˜… ${char.name} ãŒ Lv.${char.level} ã«ãƒ¬ãƒ™ãƒ«ã‚¢ãƒƒãƒ—ï¼(HP/MP 50%å›å¾©)`);
     }
   }
 
@@ -779,9 +779,9 @@
       card.className = `char-card ${p.hp <= 0 ? 'dead' : ''} ${(inBattle && currentTurnIdx === idx) ? 'active-turn' : ''}`;
       
       let statusTxt = '';
-      if (p.status.poison > 0) statusTxt += '<span class="status-bad">[“Å]</span>';
-      if (p.status.paralyze > 0) statusTxt += '<span class="status-bad">[–ƒáƒ]</span>';
-      if (p.status.darkness > 0) statusTxt += '<span class="status-bad">[ˆÃ]</span>';
+      if (p.status.poison > 0) statusTxt += '<span class="status-bad">[æ¯’]</span>';
+      if (p.status.paralyze > 0) statusTxt += '<span class="status-bad">[éº»ç—º]</span>';
+      if (p.status.darkness > 0) statusTxt += '<span class="status-bad">[æš—]</span>';
 
       card.innerHTML = `
         <div style="font-weight:bold; color:#ffd700;">${p.name} <span style="font-size:10px; color:#aaa;">Lv.${p.level}</span></div>
@@ -822,7 +822,7 @@
     if (unlockWarrior && !hasWarrior) {
       const btn = document.createElement('button');
       btn.className = 'cmd-btn';
-      btn.innerHTML = 'ím ‚ğƒp[ƒeƒB‚ÉŒ}‚¦‚é (UŒ‚E‘Ï‹v“Á‰»)';
+      btn.innerHTML = 'æˆ¦å£« ã‚’ãƒ‘ãƒ¼ãƒ†ã‚£ã«è¿ãˆã‚‹ (æ”»æ’ƒãƒ»è€ä¹…ç‰¹åŒ–)';
       btn.onclick = () => scoutMember('warrior');
       list.appendChild(btn);
     }
@@ -831,35 +831,35 @@
       const btn = document.createElement('button');
       btn.className = 'cmd-btn';
       btn.style.marginTop = '6px';
-      btn.innerHTML = '‘m—µ ‚ğƒp[ƒeƒB‚ÉŒ}‚¦‚é (‰ñ•œEx‰‡“Á‰»)';
+      btn.innerHTML = 'åƒ§ä¾¶ ã‚’ãƒ‘ãƒ¼ãƒ†ã‚£ã«è¿ãˆã‚‹ (å›å¾©ãƒ»æ”¯æ´ç‰¹åŒ–)';
       btn.onclick = () => scoutMember('cleric');
       list.appendChild(btn);
     }
 
     if ((!unlockWarrior || hasWarrior) && (!unlockCleric || hasCleric)) {
-      list.innerHTML = '<p style="font-size:11px; color:#aaa;">Œ»İŠ©—U‚Å‚«‚é–`Œ¯Ò‚Í‚¢‚Ü‚¹‚ñB</p>';
+      list.innerHTML = '<p style="font-size:11px; color:#aaa;">ç¾åœ¨å‹§èª˜ã§ãã‚‹å†’é™ºè€…ã¯ã„ã¾ã›ã‚“ã€‚</p>';
     }
   }
 
   function scoutMember(job) {
     if (job === 'warrior') {
       party.push({
-        id: 'warrior', name: 'ím', job: 'warrior',
+        id: 'warrior', name: 'æˆ¦å£«', job: 'warrior',
         level: 5, hp: 140, maxHp: 140, mp: 20, maxMp: 20,
         atk: 22, def: 8, spd: 4, exp: 0, nextExp: 50,
         status: { poison: 0, paralyze: 0, darkness: 0 },
         isCovering: false
       });
-      addLog(`š ím ‚ª’‡ŠÔ‚É‰Á‚í‚Á‚½I`);
+      addLog(`â˜… æˆ¦å£« ãŒä»²é–“ã«åŠ ã‚ã£ãŸï¼`);
     } else if (job === 'cleric') {
       party.push({
-        id: 'cleric', name: '‘m—µ', job: 'cleric',
+        id: 'cleric', name: 'åƒ§ä¾¶', job: 'cleric',
         level: 10, hp: 160, maxHp: 160, mp: 70, maxMp: 70,
         atk: 18, def: 6, spd: 7, exp: 0, nextExp: 100,
         status: { poison: 0, paralyze: 0, darkness: 0 },
         isCovering: false
       });
-      addLog(`š ‘m—µ ‚ª’‡ŠÔ‚É‰Á‚í‚Á‚½I`);
+      addLog(`â˜… åƒ§ä¾¶ ãŒä»²é–“ã«åŠ ã‚ã£ãŸï¼`);
     }
     saveGame(true);
     updateDisplay();
@@ -889,14 +889,14 @@
   function stayInn() {
     if (isGameOver || inBattle) return;
     const price = party.length * 20;
-    if (gold < price) { addLog('‚¨‹à‚ª‘«‚è‚Ü‚¹‚ñI'); return; }
+    if (gold < price) { addLog('ãŠé‡‘ãŒè¶³ã‚Šã¾ã›ã‚“ï¼'); return; }
     gold -= price;
     party.forEach(p => {
       p.hp = p.maxHp;
       p.mp = p.maxMp;
       p.status.poison = 0; p.status.paralyze = 0; p.status.darkness = 0;
     });
-    addLog(`yh‰®z‚®‚Á‚·‚è–°‚Á‚Ä‘Sˆõ‚Ì HPEMP ‚ª‘S‰ñ•œ‚µ‚½I`);
+    addLog(`ã€å®¿å±‹ã€‘ãã£ã™ã‚Šçœ ã£ã¦å…¨å“¡ã® HPãƒ»MP ãŒå…¨å›å¾©ã—ãŸï¼`);
     saveGame(true);
     updateDisplay();
   }
@@ -905,34 +905,34 @@
     if (isGameOver || inBattle) return;
     let hero = party.find(p => p.job === 'hero');
     if (hero.hp <= amount) {
-      addLog(`y‹âsz‚±‚êˆÈã—a‚¯‚é‚Æ—EÒ‚Ì–½‚ªs‚«‚Ä‚µ‚Ü‚¢‚Ü‚·I`);
+      addLog(`ã€éŠ€è¡Œã€‘ã“ã‚Œä»¥ä¸Šé ã‘ã‚‹ã¨å‹‡è€…ã®å‘½ãŒå°½ãã¦ã—ã¾ã„ã¾ã™ï¼`);
       return;
     }
     hero.hp -= amount;
     gold += amount * 10;
-    addLog(`y‹âsz—EÒ‚ÌHP‚ğ ${amount} —a‚¯A${amount * 10} G ‚ğæ“¾‚µ‚Ü‚µ‚½B`);
+    addLog(`ã€éŠ€è¡Œã€‘å‹‡è€…ã®HPã‚’ ${amount} é ã‘ã€${amount * 10} G ã‚’å–å¾—ã—ã¾ã—ãŸã€‚`);
     updateDisplay();
   }
 
   function withdrawHP(goldAmount) {
     if (isGameOver || inBattle) return;
     let hero = party.find(p => p.job === 'hero');
-    if (gold < goldAmount) { addLog(`y‹âszƒS[ƒ‹ƒh‚ª‘«‚è‚Ü‚¹‚ñI`); return; }
-    if (hero.hp >= hero.maxHp) { addLog(`y‹âsz—EÒ‚ÌHP‚ÍŠù‚É–ƒ^ƒ“‚Å‚·I`); return; }
+    if (gold < goldAmount) { addLog(`ã€éŠ€è¡Œã€‘ã‚´ãƒ¼ãƒ«ãƒ‰ãŒè¶³ã‚Šã¾ã›ã‚“ï¼`); return; }
+    if (hero.hp >= hero.maxHp) { addLog(`ã€éŠ€è¡Œã€‘å‹‡è€…ã®HPã¯æ—¢ã«æº€ã‚¿ãƒ³ã§ã™ï¼`); return; }
 
     gold -= goldAmount;
     hero.hp = Math.min(hero.maxHp, hero.hp + (goldAmount / 10));
-    addLog(`y‹âsz${goldAmount} G ‚ğx•¥‚Á‚Ä —EÒ‚ÌHP‚ğ‰ñ•œ‚µ‚Ü‚µ‚½B`);
+    addLog(`ã€éŠ€è¡Œã€‘${goldAmount} G ã‚’æ”¯æ‰•ã£ã¦ å‹‡è€…ã®HPã‚’å›å¾©ã—ã¾ã—ãŸã€‚`);
     updateDisplay();
   }
 
   function buyItem(type) {
     if (isGameOver || inBattle) return;
     let price = (type === 'herb') ? 150 : (type === 'greatHerb') ? 350 : 100;
-    if (gold < price) { addLog(`ƒS[ƒ‹ƒh‚ª‘«‚è‚Ü‚¹‚ñI`); return; }
+    if (gold < price) { addLog(`ã‚´ãƒ¼ãƒ«ãƒ‰ãŒè¶³ã‚Šã¾ã›ã‚“ï¼`); return; }
     gold -= price;
     items[type]++;
-    addLog(`ƒAƒCƒeƒ€‚ğw“ü‚µ‚Ü‚µ‚½B`);
+    addLog(`ã‚¢ã‚¤ãƒ†ãƒ ã‚’è³¼å…¥ã—ã¾ã—ãŸã€‚`);
     updateDisplay();
   }
 
